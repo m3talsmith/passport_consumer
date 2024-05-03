@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
+import 'shared/storage.dart';
 import 'scanner/page.dart';
 import 'sites/page.dart';
 
@@ -16,7 +17,6 @@ class _GeneralAppState extends State<GeneralApp> {
   final List<Widget> _pages = [const ScannerPage(), const SitesPage()];
 
   int _selectedPage = 0;
-  bool _darkMode = false;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class _GeneralAppState extends State<GeneralApp> {
     return MaterialApp(
       title: 'Passport',
       debugShowCheckedModeBanner: false,
-      theme: _darkMode
+      theme: Preferences().darkMode
           ? ThemeData(
               colorScheme: ColorScheme.fromSeed(
                 seedColor: Colors.deepPurple,
@@ -36,9 +36,8 @@ class _GeneralAppState extends State<GeneralApp> {
               useMaterial3: true)
           : ThemeData(
               colorScheme: ColorScheme.fromSeed(
-                seedColor: Colors.deepOrange,
-                secondary: Colors.deepPurple,
-                tertiary: Colors.lightGreen,
+                seedColor: Colors.deepPurple,
+                background: Colors.white,
                 brightness: Brightness.light
               ),
               useMaterial3: true),
@@ -48,21 +47,22 @@ class _GeneralAppState extends State<GeneralApp> {
           actions: [
             Row(
               children: [
-                const Icon(Icons.nightlight_round),
+                const Icon(Icons.sunny),
                 Switch(
-                  value: _darkMode,
+                  value: Preferences().darkMode,
                   onChanged: (value) {
                     setState(() {
-                      _darkMode = value;
+                      Preferences().setDarkMode(value);
                     });
                   },
                   inactiveThumbColor: Theme.of(context).hintColor,
                   trackColor: MaterialStatePropertyAll(
-                      _darkMode
+                      Preferences().darkMode
                         ? Theme.of(context).highlightColor
                         : Theme.of(context).splashColor
                   ),
                 ),
+                const Icon(Icons.nightlight_round),
               ],
             ),
             IconButton(
