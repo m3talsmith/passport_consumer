@@ -20,9 +20,20 @@ class Authentication {
     }
 
     final dio = Dio();
-    final response = await dio.post(url, data: {"public_key": publicKey.readAsStringSync()});
-    Map<String, dynamic> data = response.data ?? {};
-    return AuthenticationResponse(error: data['error'], user: User.fromMap(data['user']));
+    try {
+      final response = await dio.post(
+          url, data: {"public_key": publicKey.readAsStringSync()});
+      if (response.statusCode != null && response.statusCode! > 299) {
+        return const AuthenticationResponse(
+            error: 'There was an error with the requested server. Please try again.');
+      }
+      Map<String, dynamic> data = response.data ?? {};
+      return AuthenticationResponse(
+          error: data['error'], user: User.fromMap(data['user']));
+    } catch (_) {
+      return const AuthenticationResponse(
+          error: 'There was an error with the requested server. Please try again.');
+    }
   }
 }
 
