@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:passport/authentication/authentication.dart';
 
 class ScannerPage extends StatefulWidget {
   const ScannerPage({super.key});
@@ -15,12 +18,20 @@ class _ScannerPageState extends State<ScannerPage> {
     if (!mounted) return;
 
     String barcodeScanRes;
+    AuthenticationResponse response;
+    var messenger = ScaffoldMessenger.of(context);
 
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
-    } catch (e) {
-      barcodeScanRes = 'error: $e';
+      response = await Authentication(url: barcodeScanRes).authenticate();
+    } catch (err) {
+      barcodeScanRes = 'error: $err';
+      response = AuthenticationResponse(error: err.toString());
+    }
+
+    if (response.error != null) {
+      messenger.showSnackBar(SnackBar(content: Text('Error: ${response.error}'), showCloseIcon: true,));
     }
 
     setState(() {
@@ -38,8 +49,8 @@ class _ScannerPageState extends State<ScannerPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
-                onPressed: () {
-                  scanQR(context);
+                onPressed: () async {
+                  await scanQR(context);
                 },
                 icon: const Icon(
                   Icons.qr_code_scanner_rounded,
