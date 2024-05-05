@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:archive/archive_io.dart';
@@ -68,12 +69,13 @@ class Storage {
     return filename;
   }
 
-  _restoreData(Uint8List data) {
+  _restoreData(Uint8List buffer) {
+    if (data.existsSync()) data.deleteSync(recursive: true);
     if (!credentials.existsSync()) credentials.createSync(recursive: true);
 
-    final archive = ZipDecoder().decodeBytes(data);
-    var key = archive.findFile('master.key');
-    var pub = archive.findFile('master.pub');
+    final archive = ZipDecoder().decodeBytes(buffer);
+    var key = archive.findFile(join('credentials','master.key'));
+    var pub = archive.findFile(join('credentials','master.pub'));
     if (key == null || pub == null) return;
 
     File(join(credentials.path, 'master.key')).createSync();
@@ -84,6 +86,8 @@ class Storage {
 
     final pubStream = OutputFileStream(join(credentials.path, 'master.pub'));
     pub.writeContent(pubStream);
+
+    _init();
   }
 
   initialize() async {

@@ -115,10 +115,13 @@ class _GeneralAppState extends State<GeneralApp> {
                 trailing: const Icon(Icons.restore_rounded),
                 onTap: () async {
                   var result = await FilePicker.platform
-                      .pickFiles(allowedExtensions: ['zip']);
+                      .pickFiles();
                   if (result != null) {
                     var archive = File(result.files.single.path!);
-                    Storage().restore(archive.readAsBytesSync());
+                    setState(() {
+                      Storage().restore(archive.readAsBytesSync());
+                      scaffoldKey.currentState?.closeEndDrawer();
+                    });
                   }
                 },
               ),
