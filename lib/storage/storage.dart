@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:archive/archive_io.dart';
@@ -87,6 +86,11 @@ class Storage {
     final pubStream = OutputFileStream(join(credentials.path, 'master.pub'));
     pub.writeContent(pubStream);
 
+    _init();
+  }
+
+  clearData() {
+    data.deleteSync(recursive: true);
     _init();
   }
 

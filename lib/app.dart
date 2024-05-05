@@ -114,8 +114,7 @@ class _GeneralAppState extends State<GeneralApp> {
                 title: const Text('Restore Passport'),
                 trailing: const Icon(Icons.restore_rounded),
                 onTap: () async {
-                  var result = await FilePicker.platform
-                      .pickFiles();
+                  var result = await FilePicker.platform.pickFiles();
                   if (result != null) {
                     var archive = File(result.files.single.path!);
                     setState(() {
@@ -132,6 +131,62 @@ class _GeneralAppState extends State<GeneralApp> {
                   await Share.shareXFiles([XFile(Storage().backup)],
                       text: 'passport.zip');
                 },
+              ),
+              const Divider(
+                indent: 32,
+                endIndent: 32,
+              ),
+              TextButton.icon(
+                  onPressed: () async {
+                    scaffoldKey.currentState?.closeEndDrawer();
+                    scaffoldKey.currentState?.showBottomSheet((context) {
+                      return Padding(
+                        padding: const EdgeInsets.all(32.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Are you sure that you want delete all of your data?',
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            Row(
+                              children: [
+                                TextButton.icon(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    icon: const Icon(Icons.cancel_rounded),
+                                    label: const Text('Cancel')),
+                                Expanded(child: Container()),
+                                ElevatedButton.icon(
+                                  onPressed: () {
+                                    setState(() {
+                                      Storage().clearData();
+                                      scaffoldKey.currentState
+                                          ?.closeEndDrawer();
+                                      Navigator.of(context).pop();
+                                    });
+                                  },
+                                  icon: const Icon(Icons.check_rounded),
+                                  label: const Text('Delete'),
+                                  style: const ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStatePropertyAll(Colors.red),
+                                      foregroundColor: MaterialStatePropertyAll(
+                                          Colors.white)),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    });
+                  },
+                  icon: const Icon(Icons.delete_forever_rounded),
+                  label: const Text('Clear Data',),
+                style: ButtonStyle(
+                  foregroundColor: MaterialStatePropertyAll(Colors.red)
+                ),
               )
             ],
           ),
