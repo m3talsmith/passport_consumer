@@ -45,7 +45,7 @@ class Storage {
   }
 
   _createDefaultUser() {
-    user = User();
+    user = User(id: publicKey);
     var userData = jsonEncode(user.toMap());
     if (!userFile.existsSync()) userFile.createSync(recursive: true);
     userFile.writeAsStringSync(userData);
@@ -54,6 +54,7 @@ class Storage {
   _loadUser() {
     var userData = jsonDecode(userFile.readAsStringSync());
     user = User.fromMap(userData);
+    user.id ??= publicKey;
   }
 
   bool _masterKeyExists() {
