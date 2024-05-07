@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:passport/storage/storage.dart';
@@ -54,8 +52,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 Text(Storage().publicKey),
                 IconButton(
                     onPressed: () async {
+                      var scaffoldMessenger = ScaffoldMessenger.of(context);
                       await FlutterClipboard.copy(Storage().publicKey);
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      scaffoldMessenger.showSnackBar(
                           const SnackBar(content: Text('Public key copied')));
                     },
                     icon: Icon(
