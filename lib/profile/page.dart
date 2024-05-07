@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:passport/storage/storage.dart';
@@ -10,16 +12,30 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Stack(
         children: [
-          ListView(
-            children: [
-              Container(height: 80,),
-            ],
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ListView(
+              children: [
+                Container(
+                  height: 80,
+                ),
+                TextFormField(
+                  initialValue: Storage().user.displayName,
+                  decoration: decorateTextField(context, label: 'Display Name'),
+                  onChanged: (value) {
+                    setState(() {
+                      Storage().user.displayName = value;
+                      Storage().user.save();
+                    });
+                  },
+                )
+              ],
+            ),
           ),
           Container(
             height: 80,
@@ -27,9 +43,10 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: const EdgeInsets.all(10),
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              border: Border(bottom: BorderSide(color: Theme.of(context).highlightColor))
-            ),
+                color: Theme.of(context).cardColor,
+                border: Border(
+                    bottom:
+                        BorderSide(color: Theme.of(context).highlightColor))),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -38,8 +55,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 IconButton(
                     onPressed: () async {
                       await FlutterClipboard.copy(Storage().publicKey);
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Public key copied')));
-                    }, icon: const Icon(Icons.copy_rounded))
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Public key copied')));
+                    },
+                    icon: Icon(
+                      Icons.copy_rounded,
+                      color: Theme.of(context).colorScheme.primary,
+                    ))
               ],
             ),
           )
@@ -47,4 +69,15 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+}
+
+InputDecoration decorateTextField(BuildContext context, {String? label}) {
+  return InputDecoration(
+    border: const OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        borderSide: BorderSide.none),
+    label: label != null ? const Text('Display Name') : null,
+    filled: true,
+    fillColor: Theme.of(context).colorScheme.tertiary,
+  );
 }

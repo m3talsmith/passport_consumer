@@ -34,6 +34,7 @@ class _GeneralAppState extends State<GeneralApp> {
                 background: Colors.deepPurple,
                 surface: Colors.deepPurple,
                 secondary: Colors.deepOrangeAccent,
+                tertiary: Colors.deepPurple.shade900,
                 brightness: Brightness.dark,
               ),
               useMaterial3: true)
@@ -41,7 +42,10 @@ class _GeneralAppState extends State<GeneralApp> {
               colorScheme: ColorScheme.fromSeed(
                   seedColor: Colors.deepPurple,
                   background: Colors.white,
-                  brightness: Brightness.light),
+                  secondary: Colors.blueGrey,
+                  tertiary: Colors.blueGrey.shade100,
+                  brightness: Brightness.light,
+              ),
               useMaterial3: true),
       home: Scaffold(
         key: scaffoldKey,
@@ -184,7 +188,7 @@ class _GeneralAppState extends State<GeneralApp> {
                   },
                   icon: const Icon(Icons.delete_forever_rounded),
                   label: const Text('Clear Data',),
-                style: ButtonStyle(
+                style: const ButtonStyle(
                   foregroundColor: MaterialStatePropertyAll(Colors.red)
                 ),
               )
