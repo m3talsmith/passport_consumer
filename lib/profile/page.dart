@@ -49,7 +49,17 @@ class _ProfilePageState extends State<ProfilePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(Storage().publicKey),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(Icons.key_rounded),
+                ),
+                SizedBox(
+                  width: (MediaQuery.of(context).size.width / 3) * 2,
+                  child: Text(
+                    Storage().publicKey,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
                 IconButton(
                     onPressed: () async {
                       var scaffoldMessenger = ScaffoldMessenger.of(context);
