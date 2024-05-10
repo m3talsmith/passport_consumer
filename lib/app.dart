@@ -1,8 +1,8 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:share_extend/share_extend.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'storage/storage.dart';
@@ -40,11 +40,11 @@ class _GeneralAppState extends State<GeneralApp> {
               useMaterial3: true)
           : ThemeData(
               colorScheme: ColorScheme.fromSeed(
-                  seedColor: Colors.deepPurple,
-                  background: Colors.white,
-                  secondary: Colors.blueGrey,
-                  tertiary: Colors.blueGrey.shade100,
-                  brightness: Brightness.light,
+                seedColor: Colors.deepPurple,
+                background: Colors.white,
+                secondary: Colors.blueGrey,
+                tertiary: Colors.blueGrey.shade100,
+                brightness: Brightness.light,
               ),
               useMaterial3: true),
       home: Scaffold(
@@ -132,6 +132,10 @@ class _GeneralAppState extends State<GeneralApp> {
                 title: const Text('Backup Passport'),
                 trailing: const Icon(Icons.backup_rounded),
                 onTap: () async {
+                  if (Platform.isIOS) {
+                    await ShareExtend.share(Storage().backup, "file");
+                    return;
+                  }
                   await Share.shareXFiles([XFile(Storage().backup)],
                       text: 'passport.zip');
                 },
@@ -141,56 +145,56 @@ class _GeneralAppState extends State<GeneralApp> {
                 endIndent: 32,
               ),
               TextButton.icon(
-                  onPressed: () async {
-                    scaffoldKey.currentState?.closeEndDrawer();
-                    scaffoldKey.currentState?.showBottomSheet((context) {
-                      return Padding(
-                        padding: const EdgeInsets.all(32.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Are you sure that you want delete all of your data?',
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                            Row(
-                              children: [
-                                TextButton.icon(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    icon: const Icon(Icons.cancel_rounded),
-                                    label: const Text('Cancel')),
-                                Expanded(child: Container()),
-                                ElevatedButton.icon(
+                onPressed: () async {
+                  scaffoldKey.currentState?.closeEndDrawer();
+                  scaffoldKey.currentState?.showBottomSheet((context) {
+                    return Padding(
+                      padding: const EdgeInsets.all(32.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Are you sure that you want delete all of your data?',
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          Row(
+                            children: [
+                              TextButton.icon(
                                   onPressed: () {
-                                    setState(() {
-                                      Storage().clearData();
-                                      scaffoldKey.currentState
-                                          ?.closeEndDrawer();
-                                      Navigator.of(context).pop();
-                                    });
+                                    Navigator.of(context).pop();
                                   },
-                                  icon: const Icon(Icons.check_rounded),
-                                  label: const Text('Delete'),
-                                  style: const ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStatePropertyAll(Colors.red),
-                                      foregroundColor: MaterialStatePropertyAll(
-                                          Colors.white)),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    });
-                  },
-                  icon: const Icon(Icons.delete_forever_rounded),
-                  label: const Text('Clear Data',),
-                style: const ButtonStyle(
-                  foregroundColor: MaterialStatePropertyAll(Colors.red)
+                                  icon: const Icon(Icons.cancel_rounded),
+                                  label: const Text('Cancel')),
+                              Expanded(child: Container()),
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  setState(() {
+                                    Storage().clearData();
+                                    scaffoldKey.currentState?.closeEndDrawer();
+                                    Navigator.of(context).pop();
+                                  });
+                                },
+                                icon: const Icon(Icons.check_rounded),
+                                label: const Text('Delete'),
+                                style: const ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStatePropertyAll(Colors.red),
+                                    foregroundColor:
+                                        MaterialStatePropertyAll(Colors.white)),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  });
+                },
+                icon: const Icon(Icons.delete_forever_rounded),
+                label: const Text(
+                  'Clear Data',
                 ),
+                style: const ButtonStyle(
+                    foregroundColor: MaterialStatePropertyAll(Colors.red)),
               )
             ],
           ),
