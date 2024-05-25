@@ -1,0 +1,3 @@
+# Encryption
+
+Passport uses RSA SHA 256 key pairs for identification and authentication purposes only.
