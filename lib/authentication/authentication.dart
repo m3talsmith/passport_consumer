@@ -34,10 +34,11 @@ class Authentication {
             error:
                 'There was an error with the requested server. Please try again.');
       }
-      Map<String, dynamic> data = response.data ?? {};
+      Map<String, dynamic> data = jsonDecode(response.data) ?? {};
+
       return AuthenticationResponse(
           error: data['error'], user: User.fromMap(data['user']));
-    } catch (_) {
+    } catch (err) {
       return const AuthenticationResponse(
           error:
               'There was an error with the requested server. Please try again.');
