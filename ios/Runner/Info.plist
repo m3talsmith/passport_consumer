@@ -48,5 +48,9 @@
 	</array>
 	<key>UISupportsDocumentBrowser</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Include as the app allows you to share your backup</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Used for QR Code scan authentication</string>
 </dict>
 </plist>
